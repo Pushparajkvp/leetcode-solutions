@@ -30,6 +30,22 @@ Constraints:
 0 <= s.length <= 5 * 104
 s consists of English letters, digits, symbols and spaces.
 */
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int max = 0;
+        int[] dict = new int[128];
+        
+        for(int start=0,end=0; end < s.length(); end++) {
+            start = Math.max(dict[s.charAt(end)], start);
+            max = Math.max(max, end - start + 1);
+            dict[s.charAt(end)] = end + 1;
+        }
+        
+        return max;
+    }
+}
+
 class Solution {
     public int lengthOfLongestSubstring(String s) {
         int maxLen = 0, currentLen = 0, start = 0;
