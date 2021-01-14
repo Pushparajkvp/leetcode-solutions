@@ -35,6 +35,8 @@ Constraints:
 1 <= s.length <= 10^5
 s[i] is one of  '(' , ')' and lowercase English letters.
 */
+
+//Stack solution
 class Solution {
     private Stack<Integer> stack = new Stack<>();
     private HashSet<Integer> set = new HashSet<>();
@@ -64,5 +66,41 @@ class Solution {
                 sb.append(s.charAt(it));
         }
         return sb.toString();
+    }
+}
+
+//Two Parse method
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        StringBuilder sb = new StringBuilder();
+        int opens = 0, balance = 0;
+        
+        for(int it=0; it<s.length(); it++) {
+            char chr = s.charAt(it);
+            if(chr == '(') {
+                opens++;
+                balance++;
+            } else if(chr == ')') {
+                if(balance <= 0) continue;
+                balance--;
+            }
+            sb.append(chr);
+        }
+        
+        if(balance == 0) return sb.toString();
+        
+        StringBuilder result = new StringBuilder();
+        int retain = opens - balance;
+        for(int it=0; it<sb.length(); it++) {
+            char chr = sb.charAt(it);
+            if(chr == '(') {
+                retain--;
+                if(retain < 0)
+                    continue;
+            }
+            result.append(chr);
+        }
+
+        return result.toString();
     }
 }
