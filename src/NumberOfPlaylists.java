@@ -28,6 +28,30 @@ Note:
 
 0 <= K < N <= L <= 100
 */
+
+//DP solution
+class Solution {
+    
+    public int numMusicPlaylists(int N, int L, int K) {
+        if(N == 0)
+            return 1;
+        
+        long dp[][] = new long[L+1][N+1];
+        
+        dp[0][0] = 1;
+        for(int currLen=1; currLen<=L; currLen++) {
+            for(int uniqueSongs=1; uniqueSongs<=N; uniqueSongs++) {
+                dp[currLen][uniqueSongs] += dp[currLen - 1][uniqueSongs - 1] * (N-uniqueSongs + 1);
+                dp[currLen][uniqueSongs] += dp[currLen - 1][uniqueSongs] * (Math.max(0, uniqueSongs - K));
+                dp[currLen][uniqueSongs] %= 1000000007;
+                System.out.print(dp[currLen][uniqueSongs] + " ");
+            }
+            System.out.println("");
+        }
+        return (int)dp[L][N];
+    }
+}
+//Recursive solution
 class Solution {
     int N, L, K;
     long[][] dp;
