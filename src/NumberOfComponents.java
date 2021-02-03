@@ -70,3 +70,37 @@ class Solution {
         return index;
     }
 }
+
+//BFS solution
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        
+        int count = n;
+        
+        boolean visited[] = new boolean[n];
+        
+        Queue<Integer> queue = new LinkedList<>();
+        
+        for(int it=0; it<n; it++) {
+            if(visited[it])
+                count--;
+            else
+                queue.offer(it);
+            while(!queue.isEmpty()) {
+                int node = queue.poll();
+                if(!visited[node]) {
+                    visited[node] = true;
+                    
+                    for(int x=0; x<n; x++) {
+                        if(isConnected[node][x] == 1 && !visited[x]) {
+                            queue.offer(x);
+                        }   
+                    }
+                }
+            }
+        }
+        
+        return count;
+    }
+}
