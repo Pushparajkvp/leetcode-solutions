@@ -34,6 +34,67 @@ cols == matrix.length
 0 <= row, cols <= 200
 matrix[i][j] is '0' or '1'.
 */
+
+//DP solution
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        if(matrix.length == 0)
+            return 0;
+        
+        int rows =  matrix.length;
+        int cols = matrix[0].length;
+        
+        int heights[] = new int[cols];
+        int lefts[] = new int[cols];
+        int rights[] = new int[cols];
+        
+        Arrays.fill(rights, cols-1);
+        
+        int maxArea = 0;
+        
+        for(int row=0; row<rows; row++) {
+            int currLeft = 0, currRight = cols - 1;
+        
+            //update left
+            for(int col=0; col<cols; col++) {
+                if(matrix[row][col] == '1')
+                    lefts[col] = Math.max(lefts[col] , currLeft);
+                else {
+                    lefts[col] = 0;
+                    currLeft = col + 1;
+                }
+            }
+            
+            //update right
+            for(int col=cols-1; col>=0; col--) {
+                if(matrix[row][col] == '1') {
+                    rights[col] = Math.min(rights[col], currRight);
+                } else {
+                    rights[col] = cols - 1;
+                    currRight = col - 1;
+                }
+            }
+            
+            for(int col=0; col<cols; col++) {
+                
+                //calculate height
+                if(matrix[row][col] == '1')
+                    heights[col] = heights[col] + 1;
+                else {
+                    heights[col] = 0;
+                    continue;
+                }
+                
+                maxArea = Math.max(maxArea, (rights[col] - lefts[col] + 1) * heights[col]);
+            }
+            
+        }
+        
+        return maxArea;
+    }
+}
+
+//Histogram solution
 class Solution {
     public int maximalRectangle(char[][] matrix) {
         if(matrix.length == 0) return 0;
