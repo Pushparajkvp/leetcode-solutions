@@ -36,6 +36,31 @@ Constraints:
 s consists of English letters (lower-case and upper-case), ',' and '.'.
 1 <= numRows <= 1000
 */
+
+//O(1) space Single Pass
+class Solution {
+    public String convert(String s, int numRows) {
+        if(numRows <= 1) return s;
+        
+        int len = s.length();
+        StringBuilder sb = new StringBuilder();
+        int cycleLen = 2*numRows - 2;
+        
+        for(int row=0; row<numRows; row++) {
+            for(int col=0; col+row<len; col+=cycleLen) {
+                sb.append(s.charAt(col+row));
+                
+                if(row != 0 && row != numRows-1 && (col + cycleLen - row) < len) {
+                    sb.append(s.charAt(col + cycleLen - row));
+                }
+            }
+        }
+        
+        return sb.toString();
+    }
+}
+
+// O(n) space double pass
 class Solution {
     public String convert(String s, int numRows) {
         char[] arr = s.toCharArray();
