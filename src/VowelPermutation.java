@@ -32,6 +32,32 @@ Constraints:
 1 <= n <= 2 * 10^4
 */
 
+// DP solution
+class Solution {
+    
+    int MOD = 1000000007;
+    
+    public int countVowelPermutation(int n) {
+        int[][] dp = new int[n][5];
+        
+        Arrays.fill(dp[0], 1);
+        
+        for(int it=1; it<n; it++) {
+            dp[it][0] = dp[it-1][1];
+            dp[it][1] = (dp[it-1][0] + dp[it-1][2]) % MOD;
+            dp[it][2] = (((dp[it-1][0] + dp[it-1][1]) % MOD + dp[it-1][3]) % MOD + dp[it-1][4]) % MOD;
+            dp[it][3] = (dp[it-1][2] + dp[it-1][4]) % MOD;
+            dp[it][4] = dp[it-1][0];
+        }
+        
+        int total = 0;
+        for(int it=0; it<5; it++)
+            total = (total + dp[n-1][it]) % MOD;
+        
+        return total;
+    }
+}
+
 //DFS with memo
 class Solution {
     
