@@ -33,6 +33,110 @@ twitter.unfollow(1, 2);
 twitter.getNewsFeed(1);
 */
 
+//K sorted Lists
+class Twitter {
+    
+    private static int counter = 0;
+    
+    private HashMap<Integer, User> userMap;
+    
+    private class User {
+        public int id;
+        public HashSet<User> following;
+        public List<Tweet> tweets;
+        
+        public User(int id) {
+            this.id = id;
+            following = new HashSet<>();
+            tweets = new ArrayList<>();
+        }
+        
+        
+    }
+    
+    private class Tweet {
+        int timestamp;
+        int id;
+        User user;
+        
+        public Tweet(int id, User user){
+            this.id = id;
+            this.user = user;
+            this.timestamp = counter++;
+        }
+    }
+    
+    private User getUser(int id) {
+        User user;
+        if(userMap.containsKey(id)) {
+            user = userMap.getOrDefault(id, new User(id));
+        } else {
+            user = new User(id);
+            userMap.put(id, user);
+        } 
+        return user;
+    }
+    
+    /** Initialize your data structure here. */
+    public Twitter() {
+        userMap = new HashMap<>();
+    }
+    
+    /** Compose a new tweet. */
+    public void postTweet(int userId, int tweetId) {
+        User user = getUser(userId);
+        Tweet tweet = new Tweet(tweetId, user);
+        user.tweets.add(tweet);
+    }
+    
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    public List<Integer> getNewsFeed(int userId) {
+        User user = getUser(userId);
+        
+        HashSet<User> following = user.following;
+        following.add(user);
+        
+        HashMap<User, Integer> index = new HashMap<User, Integer>();
+        
+        PriorityQueue<Tweet> heap = new PriorityQueue<>(following.size() , (one, two) -> { return two.timestamp - one.timestamp;} ); 
+        
+        for(User userIt : following) {
+            if(userIt.tweets.isEmpty())
+                continue;
+            index.put(userIt, userIt.tweets.size() - 1);
+            heap.add(userIt.tweets.get(userIt.tweets.size() - 1));
+        }
+        
+        List<Integer> result = new ArrayList<>();
+        while(!heap.isEmpty() && result.size() < 10) {
+            Tweet recentTweet = heap.poll();
+            result.add(recentTweet.id);
+            int nextIndex = index.get(recentTweet.user) - 1;
+            if(nextIndex >= 0) {
+                index.put(recentTweet.user, nextIndex);
+                heap.add(recentTweet.user.tweets.get(nextIndex));
+            }
+        }
+        
+        return result;
+    }
+    
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    public void follow(int followerId, int followeeId) {
+        User follower = getUser(followerId), followee = getUser(followeeId);
+        follower.following.add(followee);
+    }
+    
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    public void unfollow(int followerId, int followeeId) {
+        User follower = getUser(followerId), followee = getUser(followeeId);
+        if(follower.following.contains(followee)) {
+            follower.following.remove(followee);
+        }
+    }
+}
+
+//Single LinkedList
 class Twitter {
 
     HashMap<Integer, Set<Integer>> follows;
