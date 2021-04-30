@@ -50,3 +50,28 @@ class Solution {
         return result;
     }
 }
+
+//Combination without duplicates
+
+class SubsetWithDuplicates {
+
+  public static List<List<Integer>> findSubsets(int[] nums) {
+    List<List<Integer>> subsets = new ArrayList<>();
+    Arrays.sort(nums);
+    combinations(subsets, new LinkedList<Integer>(), nums, 0);
+    return subsets;
+  }
+
+  private static void combinations(List<List<Integer>> subsets, LinkedList<Integer> curr, int[] nums, int index) {
+    
+    subsets.add(new ArrayList<>(curr));
+
+    for(int it=index; it<nums.length; it++) {
+      if(it > index  && nums[it - 1] == nums[it])
+        continue;
+      curr.add(nums[it]);
+      combinations(subsets, curr, nums, it + 1);
+      curr.removeLast();
+    }
+  }
+}
