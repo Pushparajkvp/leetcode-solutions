@@ -67,13 +67,15 @@ class NumArray {
         this.bit[0] = 0;
         
         for(int it=0; it < nums.length; it++) {
-            this.bit[it+1] = nums[it];
+            int bitIndex = it + 1;
+            this.bit[bitIndex] = nums[it];
         }
         
         for(int it=0; it<nums.length; it++) {
-            int parent = (it+1) + lsb(it + 1);
+            int bitIndex = it + 1;
+            int parent = bitIndex + lsb(bitIndex);
             if(parent <= nums.length)
-                this.bit[parent] += this.bit[it+1];
+                this.bit[parent] += this.bit[bitIndex];
         }
         
     }
