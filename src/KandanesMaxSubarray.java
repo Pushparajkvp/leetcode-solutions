@@ -36,12 +36,24 @@ Follow up: If you have figured out the O(n) solution, try coding another solutio
 */
 class Solution {
     public int maxSubArray(int[] nums) {
-        int n = nums.length, max = nums[0];
+        int n = nums.length, maxSoFar = nums[0]; 
+        int maxEndingHere = maxSoFar < 0 ? 0 : maxSoFar;
+        int startIndex = 0;
         
         for(int it=1; it<n; it++) {
-            if(nums[it-1] > 0) nums[it] += nums[it-1];
-            max = Math.max(max, nums[it]);
+            int sum = maxEndingHere + nums[it];
+            if(sum < 0) {
+                startIndex = it + 1;
+                maxEndingHere = 0;
+            } else {
+                maxEndingHere = sum;
+            }
+            
+            if(maxSoFar < sum) {
+                maxSoFar = sum;
+                System.out.println(startIndex + " " + it);
+            }
         }
-        return max;
+        return maxSoFar;
     }
 }
